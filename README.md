@@ -56,9 +56,9 @@ It also provides test datasets for `interpolation` tests mixing all kinds of pro
 
 If you want to check the different features provided in this github and some samples, you can check:
 
-- [math_ds_train.ipynb] showing how to use MathDatasetManager to build custom math datasets from full dataset and how to train a Transformer model on it.
+- [math_ds_train.ipynb](./math_ds_train.ipynb) showing how to use MathDatasetManager to build custom math datasets from full dataset and how to train a Transformer model on it.
 
-- [math_ds_predict.ipynb] playing with a pre-trained transformer model on arithmetic addition/subtraction in easy or hard difficulty
+- [math_ds_predict.ipynb](./math_ds_predict.ipynb) playing with a pre-trained transformer model on arithmetic addition/subtraction in easy or hard difficulty
 
 
 If you want to use current code (and maybe contribute), you should:
