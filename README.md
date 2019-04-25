@@ -19,6 +19,7 @@ My aim is to explore if models can unravel math laws by themselves... or not :D
 The dataset is not extraordinary huge but in v1.0, it contains 10s of millions of questions/answers and despite the small size of each pair, millions of them will consume all your RAM. So, those little helpers try to manage data in a streamed and lazy-loading way (as much as Python allows it) and then allow to mix different parts of the dataset to explore multiple ideas.
 
 The idea of the paper is to provide a robust toolkit (https://github.com/deepmind/mathematics_dataset) to randomly and heterogenously generate mathematical datasets among multiple math problem categories:
+
     - algebra
     - numbers
     - polynomials
@@ -31,6 +32,7 @@ The idea of the paper is to provide a robust toolkit (https://github.com/deepmin
 All problem are constituted of a textual question like `what is 30 + 535?` (max 160 chars) and a textual response `565` (max 30 chars). So it's not an abstract representation of math problem but a very human one and it mixes Natural Language Processing with math concepts.
 
 For each of those categories, it provides multiple operation modules. For ex, in `algebra` category:
+
     - mul
     - add_or_sub_in_base
     - simplify_surd
@@ -48,6 +50,7 @@ For each of those categories, it provides multiple operation modules. For ex, in
     - add_or_sub_big
 
 Problem can be generated with different difficulties:
+
     - train-easy
     - train-medium
     - train-hard
