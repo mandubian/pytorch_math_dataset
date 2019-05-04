@@ -8,6 +8,8 @@ import torch
 from torch.utils import data
 from transformer import Constants
 
+from dgl_transformer.dataset.graph import GraphPool
+
 # Math Dataset constants (from paper)
 
 # input chars are selected from basic ASCII chars
@@ -259,6 +261,27 @@ def question_answer_to_position_batch_collate_fn(qas):
     return batch_qs, batch_qs_pos, batch_as, batch_as_pos
 
 
+
+    
+def question_answer_to_batch_collate_fn(qas):
+    ''' Gather + Pad the question/answer to the max seq length in batch '''
+
+    max_q_len = max(len(qa["q_enc"]) for qa in qas)
+    max_a_len = max(len(qa["a_enc"]) for qa in qas)
+
+    batch_qs = []
+    batch_as = []
+    batch_pos = []
+    for qa in qas:
+      batch_qs.append(np.pad(qa["q_enc"], (0, max_q_len - len(qa["q_enc"])), mode='constant', constant_values=Constants.PAD))
+      batch_as.append(np.pad(qa["a_enc"], (0, max_a_len - len(qa["a_enc"])), mode='constant', constant_values=Constants.PAD))
+    
+    batch_qs = torch.LongTensor(batch_qs)
+    batch_as = torch.LongTensor(batch_as)
+
+    return batch_qs, batch_as
+
+
 def question_to_position_batch_collate_fn(qs):
     ''' Gather + Pad the question to the max seq length in batch '''
 
@@ -277,3 +300,47 @@ def question_to_position_batch_collate_fn(qs):
     batch_qs_pos = torch.LongTensor(batch_qs_pos)
 
     return batch_qs, batch_qs_pos
+
+
+class GraphCollate():   
+    def __init__(self):
+        self.graph_pool = GraphPool(MAX_QUESTION_SZ, MAX_ANSWER_SZ)
+        
+    def __call__(self, device):
+        def collate_fn(qas):
+            ''' Gather + Pad the question/answer to the max seq length in batch '''
+
+            max_q_len = max(len(qa["q_enc"]) for qa in qas)
+            max_a_len = max(len(qa["a_enc"]) for qa in qas)
+
+            batch_qs = []
+            batch_as = []
+            batch_pos = []
+            for qa in qas:
+              batch_qs.append(np.pad(qa["q_enc"], (0, max_q_len - len(qa["q_enc"])), mode='constant', constant_values=Constants.PAD))
+              batch_as.append(np.pad(qa["a_enc"], (0, max_a_len - len(qa["a_enc"])), mode='constant', constant_values=Constants.PAD))
+
+            batch_qs = np.array(batch_qs)
+            batch_as = np.array(batch_as)
+            gold_as = torch.LongTensor(batch_as[:, 1:])
+            g = self.graph_pool(batch_qs, batch_as, device='cpu')
+
+            return gold_as, g
+        
+        return collate_fn
+
+    
+    def beam(self, qs, device, max_len, start_sym, beam_size):
+        ''' Gather + Pad the question to the max seq length in batch '''
+
+        max_q_len = max(len(q) for q in qs)
+
+        batch_qs = []
+        batch_pos = []
+        for q in qs:
+            batch_qs.append(np.pad(q, (0, max_q_len - len(q)), mode='constant', constant_values=Constants.PAD))
+
+        batch_qs = np.array(batch_qs)
+        g = self.graph_pool.beam(batch_qs, start_sym, max_len, beam_size, device=device)
+
+        return g    

@@ -4,6 +4,10 @@ from math_dataset import (
 )
 from transformer.Models import Transformer
 
+from math_dataset import (
+    VOCAB_SZ, MAX_QUESTION_SZ, MAX_ANSWER_SZ
+)
+
 
 def one_hot_seq(chars, vocab_size=VOCAB_SZ, char0 = ord(' ')):
   chars = (chars - char0).long()
@@ -22,7 +26,14 @@ def build_transformer(
 ):
     return Transformer(
       n_src_vocab=n_src_vocab, # add PAD in vocabulary
-      n_tgt_vocab=n_src_vocab, # add PAD in vocabulary
+      n_tgt_vocab=n_tgt_vocab, # add PAD in vocabulary
       len_max_seq_encoder=len_max_seq_encoder,
       len_max_seq_decoder=len_max_seq_decoder,
     )
+
+def build_dgl_transformer(
+    n_src_vocab=VOCAB_SZ + 1, n_tgt_vocab=VOCAB_SZ + 1,
+    len_max_seq_encoder=MAX_QUESTION_SZ, len_max_seq_decoder=MAX_ANSWER_SZ
+):
+    from dgl_transformer.dgl_transformer import make_model
+    return make_model(src_vocab=n_src_vocab, tgt_vocab=n_tgt_vocab)
