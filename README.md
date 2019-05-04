@@ -59,9 +59,15 @@ It also provides test datasets for `interpolation` tests mixing all kinds of pro
 
 If you want to check the different features provided in this github and some samples, you can check:
 
+### Original Transformer experiments
+
 - [math_ds_train.ipynb](./math_ds_train.ipynb) showing how to use MathDatasetManager to build custom math datasets from full dataset and how to train a Transformer model on it.
 
 - [math_ds_predict.ipynb](./math_ds_predict.ipynb) playing with a pre-trained transformer model on arithmetic addition/subtraction in easy or hard difficulty
+
+### Transformer implemented as a DGL Graph Neural Network experiments
+
+- [math_ds_dgl_transformer.ipynb](./math_ds_dgl_transformer.ipynb) demonstrates the implementation of a Transformer as a DGL Graph Neural Network with some considerations on the nature of Transformer seen as Graph Neural Network. Then we train this DGL-Transformer on a sub-sample of Mathematical Reasoning Dataset to check preliminary results.
 
 
 If you want to use current code (and maybe contribute), you should:
